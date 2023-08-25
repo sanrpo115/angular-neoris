@@ -1,27 +1,37 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductRepositoryApi } from 'src/app/core/infrastructure/api/product.repository.api';
 import { enviroment } from 'src/enviroments/enviroment';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-
-const headers = new HttpHeaders()
-  .set('authorId', '2')
-  .set('content-type', 'application/json');
+import * as moment from 'moment';
+import { Product } from 'src/app/core/services/domain/models/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionProductosService {
   endpoint: string = enviroment.context;
-  dataSource: any = []
+  dataSource: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private productRepositoryApi: ProductRepositoryApi, private http: HttpClient) {
-  }
+  constructor(private productRepositoryApi: ProductRepositoryApi) { }
 
   getProducts(): void {
      this.productRepositoryApi.getProducts().subscribe(products => {
-      console.log("Observable http:", products)
+      products.forEach(product => {
+        product.date_release = moment(product.date_release).format("YYYY-MM-DD");
+        product.date_revision = moment(product.date_revision).format("YYYY-MM-DD");
+      })
+      this.dataSource.next(products);
+    });
+  }
+
+  createProduct(product: Product): void {
+    this.productRepositoryApi.createProduct(product).subscribe(res => {
+      console.log("Create Product ::> ", res)
     })
   }
 
+  verifyID(id: string): Observable<any> {
+    return this.productRepositoryApi.verificationId(id);
+  }
 
 }

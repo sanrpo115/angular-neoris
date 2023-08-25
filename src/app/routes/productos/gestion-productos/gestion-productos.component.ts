@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { enviroment } from 'src/enviroments/enviroment';
 import { GestionProductosService } from 'src/app/shared/services/gestion-productos.service';
 
@@ -8,11 +9,17 @@ import { GestionProductosService } from 'src/app/shared/services/gestion-product
   templateUrl: './gestion-productos.component.html',
   styleUrls: ['./gestion-productos.component.scss']
 })
-export class GestionProductosComponent {
+export class GestionProductosComponent implements OnInit {
   total: number = 0;
   dataRes: any = [];
+  subscriptions: Subscription = new Subscription();
 
-  constructor (private router: Router,  private gestionProductosService: GestionProductosService ) { }
+  constructor (private router: Router,  private gestionProductosService: GestionProductosService ) {
+    this.subscriptions = this.gestionProductosService.dataSource.subscribe((res:any) => {
+      if (res && res.length)
+        this.total = res.length;
+    });
+  }
 
   ngOnInit(): void {
     this.consult();
@@ -21,7 +28,6 @@ export class GestionProductosComponent {
   consult(): void {
     this.gestionProductosService.getProducts();
   }
-
 
   navigateTo(): void {
     console.log('navigateTo')

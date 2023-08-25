@@ -6,5 +6,5 @@ export interface ProductRepository {
   createProduct(product: Product): Observable<any>;
   updateProduct(product: Product): Observable<any>;
   deleteProduct(): Observable<any>;
-  verificationId(): Observable<boolean>;
+  verificationId(id: string): Observable<boolean>;
 }

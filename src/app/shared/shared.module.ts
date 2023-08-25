@@ -4,6 +4,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ErrorComponent } from "./components/error/error.component";
 import { TableComponent } from './components/table/table.component';
 import { GestionProductosService } from "./services/gestion-productos.service";
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { GestionProductosService } from "./services/gestion-productos.service";
   declarations: [
     ErrorComponent,
     TableComponent,
+    LoadingComponent,
   ],
   exports: [
     TableComponent,

@@ -8,9 +8,9 @@
       <th></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody *ngIf="datasource && datasource.length > 0">
     <tr *ngFor="let data of datasource">
-			<td *ngFor="let prop of propsColumns">
+      <td *ngFor="let prop of propsColumns">
         <img *ngIf="prop === 'logo' " src="{{data[prop]}}" alt="">
         <span *ngIf="prop !== 'logo'">
           {{data[prop]}}
@@ -28,3 +28,6 @@
 		</tr>
   </tbody>
 </table>
+<ng-container *ngIf="datasource && datasource.length <= 0">
+  <app-loading></app-loading>
+</ng-container>

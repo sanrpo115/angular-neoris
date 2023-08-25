@@ -10,6 +10,7 @@ import { Product } from '../../services/domain/models/product.model';
 })
 export class ProductRepositoryApi implements ProductRepository {
   private endpoint = enviroment.context;
+  private verify = enviroment.idVerify;
 
   constructor(private apiService: ApiService) { }
 
@@ -29,8 +30,8 @@ export class ProductRepositoryApi implements ProductRepository {
     return this.apiService.delete(this.endpoint);
   }
 
-  verificationId(): Observable<boolean> {
-    return this.apiService.verify(this.endpoint);
+  verificationId(id: string): Observable<boolean> {
+    return this.apiService.verify(`${this.endpoint}${this.verify}?id=${id}`);
   }
 
 }

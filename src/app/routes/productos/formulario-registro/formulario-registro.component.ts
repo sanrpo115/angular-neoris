@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { enviroment } from 'src/enviroments/enviroment';
 import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
+import { GestionProductosService } from 'src/app/shared/services/gestion-productos.service';
 import * as moment from 'moment';
 
 @Component({
@@ -14,8 +15,14 @@ import * as moment from 'moment';
 export class FormularioRegistroComponent {
   formConfiguration = new Array();
   form: FormGroup;
+  isEdit: boolean = false;
+  idActive: any = '' || null;
 
-  constructor(private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private gestionProductosService: GestionProductosService
+  ) {
     this.form = this.createFormGroup();
     this.form.get('date_release')?.valueChanges.subscribe(newValue => {
       this.onControlDateValueChanges(newValue);
@@ -25,8 +32,11 @@ export class FormularioRegistroComponent {
   ngOnInit(): void {
     this.formConfiguration = FIELDS_FORM.fields;
     this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      console.log(id);
+      if (params.has('id')) {
+        this.isEdit = true;
+        this.idActive = params.get('id');
+        console.log(this.idActive);
+      }
     });
   }
 
@@ -36,7 +46,9 @@ export class FormularioRegistroComponent {
       id: this.fb.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]),
       name: this.fb.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
       description: this.fb.control('', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]),
-      logo: this.fb.control('', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/)]),
+      logo: this.fb.control('', [Validators.required]),
+      // Se comenta control ya que la validacion Regex bloquea el formulario
+      // logo: this.fb.control('', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/)]),
       date_release: this.fb.control(HelperFunctions.getFormatDate(today, 0), Validators.required),
       date_revision: this.fb.control(HelperFunctions.getFormatDate(today, enviroment.days_for_review), Validators.required)
     });
@@ -59,16 +71,19 @@ export class FormularioRegistroComponent {
   }
 
   resetFields(): void {
-    console.log('resetFields');
     this.form.reset();
   }
 
-  sendForm(): void {
+  sendForm() {
     if (this.form.valid) {
-      console.log('valido');
-    } else {
-      console.log('NO valido');
-
+      const values = this.form.value;
+      this.gestionProductosService.verifyID(values.id).subscribe(data => {
+        if (!data) {
+          this.gestionProductosService.createProduct(values)
+        } else {
+          console.log("ID existente")
+        }
+      });;
     }
   }
 

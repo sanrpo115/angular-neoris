@@ -6,5 +6,6 @@ export const enviroment = {
   urlBase: 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros',
   path: 'bp',
   context: 'products',
+  idVerify: '/verification',
   authorId: '2'
 }

@@ -19,7 +19,9 @@
     padding: 30px;
     padding-bottom: 60px;
     .table {
+      overflow-y: hidden;
       overflow-x: auto;
+      min-height: 200px;
     }
     .footer-content-table {
       margin-top: 20px;
