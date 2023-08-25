@@ -1,5 +1,7 @@
+import { Router } from '@angular/router';
 import { Component, HostListener } from '@angular/core';
 import { COLUMNS_TABLE } from '../../constants/constants';
+import { enviroment } from 'src/enviroments/enviroment';
 
 interface DataItem {
   id: string;
@@ -38,6 +40,8 @@ export class TableComponent {
     { id: "test-258", name: "test 258", description: "prueba test", logo: "https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay With Visa/Tarjetas/visa-signature-400x225.jpg", date_release: "2023-11-12T00:00:00.000+00:00", date_revision: "2024-11-12T00:00:00.000+00:00", dropdownOpen: false }
   ];
 
+  constructor(private router: Router) {}
+
   toggleDropdown(item: DataItem) {
     this.idActive = item.id;
     this.activeDropdown = item;
@@ -55,6 +59,7 @@ export class TableComponent {
 
   editProduct(data: DataItem) {
     console.log('editar', data);
+    this.router.navigate([`${enviroment.context_path}/formulario-registro`, data.id])
   }
 
   deleteProduct(data: DataItem) {

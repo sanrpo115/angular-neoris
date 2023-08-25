@@ -1,10 +1,10 @@
-import { Router } from '@angular/router';
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import * as moment from 'moment';
 import { enviroment } from 'src/enviroments/enviroment';
 import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-formulario-registro',
@@ -15,7 +15,7 @@ export class FormularioRegistroComponent {
   formConfiguration = new Array();
   form: FormGroup;
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
     this.form = this.createFormGroup();
     this.form.get('date_release')?.valueChanges.subscribe(newValue => {
       this.onControlDateValueChanges(newValue);
@@ -24,6 +24,10 @@ export class FormularioRegistroComponent {
 
   ngOnInit(): void {
     this.formConfiguration = FIELDS_FORM.fields;
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      console.log(id);
+    });
   }
 
   createFormGroup(): FormGroup {

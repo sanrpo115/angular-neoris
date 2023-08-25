@@ -3,7 +3,8 @@
 .body-container {
   display: block;
   width: 100%;
-  height: calc(100vh - 140px);
+  height: calc(100% - 140px);
+  min-height: 100vh;
   background-color: $c-gr;
   padding: 20px 0;
   .content {

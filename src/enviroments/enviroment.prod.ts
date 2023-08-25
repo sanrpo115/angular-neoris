@@ -4,5 +4,8 @@ export const enviroment = {
   production: true,
   context_path: 'productos',
   days_for_review: 365,
-  key_for_review: 'days'
+  urlBase: 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipfmsa-productosfinancieros',
+  pathContext: 'bp',
+  obtenerProductos: 'products',
+  authorId: '2'
 }
