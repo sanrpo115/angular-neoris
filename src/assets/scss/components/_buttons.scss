@@ -1,12 +1,12 @@
 @import '../variables';
 
 button {
+  font-family: $bold;
+  font-size: 14px;
   height: 45px;
   line-height: 45px;
   border-radius: 10px;
   padding: 0 20px;
-  font-family: $bold;
-  font-size: 14px;
   letter-spacing: 1px;
   cursor: pointer;
   &.primary {
@@ -14,4 +14,8 @@ button {
     background-color: $c-yellow;
     color: $c-blue;
   }
+  &.h45 {
+    height: 55px;
+  }
+
 }

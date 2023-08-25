@@ -1,0 +1,15 @@
+@import '../variables';
+
+input {
+  padding: 8px;
+  font-family: $regular;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid #c0c7d9;
+  color: $c-gr-dk;
+  &:focus {
+    outline: none;
+    border-color: #c0c7d9;
+    box-shadow: 0 0 0 2px rgba(76, 77, 78, 0.25);
+  }
+}

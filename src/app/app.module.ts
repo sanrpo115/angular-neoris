@@ -4,19 +4,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from './layout/layout.module';
-import { HeaderComponent } from './layout/header/header.component';
-import { ErrorComponent } from './shared/components/error/error.component';
 import { RoutesModule } from './routes/routes.module';
+import { SharedModule } from './shared/shared.module';
+import { SearchInputComponent } from './components/search-input/search-input.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SearchInputComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    LayoutModule,
     RoutesModule,
-    LayoutModule
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,30 @@
+<table class="table table-products">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns" width="{{column.width}}">
+        {{column.name}}
+        <span *ngIf="column.tooltip" class="tooltip">i</span>
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of datasource">
+			<td *ngFor="let prop of propsColumns">
+        <img *ngIf="prop === 'logo' " src="{{data[prop]}}" alt="">
+        <span *ngIf="prop !== 'logo'">
+          {{data[prop]}}
+        </span>
+			</td>
+      <td>
+        <span class="actions" (click)="toggleDropdown(data)"></span>
+        <div id="myDropdown" *ngIf="data.dropdownOpen" class="dropdown-content">
+          <ul class="action-list">
+            <li class="actions-item" (click)="editProduct(data)">Editar</li>
+            <li class="actions-item" (click)="deleteProduct(data)">Eliminar</li>
+          </ul>
+        </div>
+      </td>
+		</tr>
+  </tbody>
+</table>

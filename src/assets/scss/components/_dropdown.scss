@@ -1,0 +1,34 @@
+@import '../variables';
+
+.dropdown-content {
+  display: block;
+  width: 150px;
+  position: absolute;
+  right: 40px;
+  top: 30px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  font-family: $regular;
+  font-size: 18px;
+  ul {
+    &.action-list {
+      list-style: none;
+      li {
+        &.actions-item {
+          display: block;
+          padding: 10px 20px;
+          font-family: $regular;
+          color: $c-gr-dk;
+          font-size: 16px;
+          cursor: pointer;
+        }
+        &:hover {
+          background-color: $c-gr;
+        }
+      }
+    }
+  }
+}
