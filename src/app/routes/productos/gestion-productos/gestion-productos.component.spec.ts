@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GestionProductosComponent } from './gestion-productos.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('GestionProductosComponent', () => {
   let component: GestionProductosComponent;
@@ -8,7 +8,12 @@ describe('GestionProductosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GestionProductosComponent]
+      imports: [ 
+        SharedModule
+      ],
+      declarations: [
+        GestionProductosComponent
+      ]
     });
     fixture = TestBed.createComponent(GestionProductosComponent);
     component = fixture.componentInstance;

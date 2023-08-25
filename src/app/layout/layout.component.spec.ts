@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LayoutComponent } from './layout.component';
 import { HeaderComponent } from './header/header.component';
+import { SharedModule } from '../shared/shared.module';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
@@ -9,6 +10,7 @@ describe('LayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [ SharedModule ],
       declarations: [
         LayoutComponent,
         HeaderComponent

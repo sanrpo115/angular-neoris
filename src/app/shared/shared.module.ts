@@ -1,9 +1,8 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ErrorComponent } from "./components/error/error.component";
 import { RouterModule } from "@angular/router";
-import {  } from "@angular/compiler";
-import { TableComponent } from './components/table/table.component';
 import { CommonModule } from "@angular/common";
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ErrorComponent } from "./components/error/error.component";
+import { TableComponent } from './components/table/table.component';
 
 @NgModule({
   imports: [
