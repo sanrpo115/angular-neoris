@@ -41,7 +41,6 @@ export const FIELDS_FORM = {
     {
       label: 'ID',
       fieldName: 'id',
-      value: '',
       placeholder: 'Ingresa un ID',
       type: INPUT_TYPES.text,
       required: true,
@@ -52,7 +51,6 @@ export const FIELDS_FORM = {
     {
       label: 'Nombre',
       fieldName: 'name',
-      value: '',
       placeholder: 'Ingresa un Nombre de producto',
       type: INPUT_TYPES.text,
       required: true,
@@ -63,7 +61,6 @@ export const FIELDS_FORM = {
     {
       label: 'Descripción',
       fieldName: 'description',
-      value: '',
       placeholder: 'Ingresa una descripción de producto',
       type: INPUT_TYPES.text,
       required: true,
@@ -74,7 +71,6 @@ export const FIELDS_FORM = {
     {
       label: 'Logo',
       fieldName: 'logo',
-      value: '',
       placeholder: 'Ingresa un logo',
       type: INPUT_TYPES.url,
       required: true,
@@ -85,22 +81,22 @@ export const FIELDS_FORM = {
     {
       label: 'Fecha de Liberación',
       fieldName: 'date_release',
-      value: '',
       placeholder: 'Selecciona fecha de liberación',
       type: INPUT_TYPES.date,
       required: true,
       messageObligatoryValidation: true,
-      min: 1
+      min: 1,
+      disabled: false
     },
     {
       label: 'Fecha de revisión',
       fieldName: 'date_revision',
-      value: '',
       placeholder: 'Selecciona fecha de revisión',
       type: INPUT_TYPES.date,
       required: true,
       messageObligatoryValidation: true,
-      min: enviroment.days_for_review
+      min: enviroment.days_for_review,
+      disabled: true
     },
   ]
 }

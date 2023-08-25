@@ -1,5 +1,7 @@
 @import '../../../../assets/scss/variables';
 @import '../../../../assets/scss/components/buttons';
+@import '../../../../assets/scss/components/inputs';
+@import '../../../../assets/scss/components/fields';
 
 .app-content {
   width: 50%;
@@ -28,17 +30,31 @@
   .form-container {
     padding: 30px 50px;
     box-sizing: border-box;
-    .form-fields {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      .app-input {
-        width: calc(50% - 20px);
-        &:nth-child(odd) {
-          margin-right: 20px;
+    form {
+      .form-fields {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        .form-field {
+          width: calc(50% - 20px);
+          &:nth-child(odd) {
+            margin-right: 20px;
+          }
+          &:nth-child(even) {
+            margin-left: 20px;
+          }
         }
-        &:nth-child(even) {
-          margin-left: 20px;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: center;
+        button {
+          &:nth-child(odd) {
+            margin-right: 40px;
+          }
+          &:nth-child(even) {
+            margin-left: 40px;
+          }
         }
       }
     }

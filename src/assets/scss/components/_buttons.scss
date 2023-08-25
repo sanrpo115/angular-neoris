@@ -9,9 +9,13 @@ button {
   padding: 0 20px;
   letter-spacing: 1px;
   cursor: pointer;
+  border: none;
   &.primary {
-    border: none;
     background-color: $c-yellow;
+    color: $c-blue;
+  }
+  &.secundary {
+    background-color: $c-g2;
     color: $c-blue;
   }
   &.h45 {

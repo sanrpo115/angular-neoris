@@ -4,20 +4,33 @@
   </div>
   <div class="divider"></div>
   <div class="form-container">
-    <form [formGroup]="form" >
+    <form [formGroup]="form" (submit)="onSubmit()">
         <div class="form-fields">
           <ng-container *ngFor="let field of formConfiguration" [ngSwitch]="field.type">
             <ng-container *ngSwitchCase="'text'">
-              <app-input-text class="app-input" [dataComponent]="field"></app-input-text>
+              <div class="form-field">
+                <label for="{{field.fieldName}}">{{field.label}}</label>
+                <input type="text" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="{{field.placeholder}}" required min="{{field.minlength}}">
+              </div>
             </ng-container>
             <ng-container *ngSwitchCase="'url'">
-              <app-input-url class="app-input" [dataComponent]="field"></app-input-url>
+              <div class="form-field">
+                <label for="{{field.fieldName}}">{{field.label}}</label>
+                <input type="url" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="{{field.placeholder}}" pattern="{{field.pattern}}" required size="{{field.min}}">
+              </div>
             </ng-container>
             <ng-container *ngSwitchCase="'date'">
-              <app-input-date class="app-input" [dataComponent]="field"></app-input-date>
+              <div class="form-field">
+                <label for="{{field.fieldName}}">{{field.label}}</label>
+                <input type="date" [formControlName]="field.fieldName" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="DD/MM/YYYY" required min="{{getCurrentDate(field.min)}}" >
+              </div>
             </ng-container>
           </ng-container>
         </div>
+        <div class="form-actions">
+          <button class="secundary h45" (click)="resetFields()">Reiniciar</button>
+          <button class="primary h45" (click)="onSubmit()">Enviar</button>
+      </div>
     </form>
   </div>
 </div>
