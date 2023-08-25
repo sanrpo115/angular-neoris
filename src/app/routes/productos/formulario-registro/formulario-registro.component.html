@@ -4,32 +4,47 @@
   </div>
   <div class="divider"></div>
   <div class="form-container">
-    <form [formGroup]="form" (submit)="onSubmit()">
+    <form [formGroup]="form">
         <div class="form-fields">
           <ng-container *ngFor="let field of formConfiguration" [ngSwitch]="field.type">
             <ng-container *ngSwitchCase="'text'">
               <div class="form-field">
                 <label for="{{field.fieldName}}">{{field.label}}</label>
-                <input type="text" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="{{field.placeholder}}" required min="{{field.minlength}}">
+                <input type="text" name="{{field.fieldName}}" id="{{field.fieldName}}" [formControlName]="field.fieldName" 
+                  placeholder="{{field.placeholder}}" required min="{{field.minlength}}">
+                <div *ngIf="form.get(field.fieldName)?.touched && form.get(field.fieldName)?.errors?.['required']" class="alert alert-danger">
+                  Este campo es requerido!
+                </div>
+                <div *ngIf="form.get(field.fieldName)?.touched && (form.get(field.fieldName)?.errors?.['minlength'] || form.get(field.fieldName)?.errors?.['maxlength'])" class="alert alert-danger">
+                  {{field.label}} no válido!
+                </div>
               </div>
             </ng-container>
             <ng-container *ngSwitchCase="'url'">
               <div class="form-field">
                 <label for="{{field.fieldName}}">{{field.label}}</label>
-                <input type="url" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="{{field.placeholder}}" pattern="{{field.pattern}}" required size="{{field.min}}">
+                <input type="url" name="{{field.fieldName}}" id="{{field.fieldName}}" [formControlName]="field.fieldName" placeholder="{{field.placeholder}}"
+                  required size="{{field.min}}">
+                  <div *ngIf="form.get(field.fieldName)?.touched && form.get(field.fieldName)?.errors?.['required']" class="alert alert-danger">
+                    Este campo es requerido!
+                  </div>
+                  <div *ngIf="form.get(field.fieldName)?.touched && form.get(field.fieldName)?.errors?.['pattern']" class="alert alert-danger">
+                    {{field.label}} no válido!
+                  </div>
               </div>
             </ng-container>
             <ng-container *ngSwitchCase="'date'">
-              <div class="form-field">
+              <div class="form-field" [ngClass]="{'disabled': field.disabled}">
                 <label for="{{field.fieldName}}">{{field.label}}</label>
-                <input type="date" [formControlName]="field.fieldName" name="{{field.fieldName}}" id="{{field.fieldName}}" placeholder="DD/MM/YYYY" required min="{{getCurrentDate(field.min)}}" >
+                <input type="date" [formControlName]="field.fieldName" name="{{field.fieldName}}" id="{{field.fieldName}}" 
+                  required min="{{getCurrentDate(field.min)}}" >
               </div>
             </ng-container>
           </ng-container>
         </div>
         <div class="form-actions">
           <button class="secundary h45" (click)="resetFields()">Reiniciar</button>
-          <button class="primary h45" (click)="onSubmit()">Enviar</button>
+          <button class="primary h45" (click)="sendForm()" [disabled]="!form.valid">Enviar</button>
       </div>
     </form>
   </div>

@@ -1,9 +1,10 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { enviroment } from 'src/enviroments/enviroment';
 import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
-import { enviroment } from 'src/enviroments/enviroment';
 
 @Component({
   selector: 'app-formulario-registro',
@@ -16,6 +17,9 @@ export class FormularioRegistroComponent {
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.form = this.createFormGroup();
+    this.form.get('date_release')?.valueChanges.subscribe(newValue => {
+      this.onControlDateValueChanges(newValue);
+    })
   }
 
   ngOnInit(): void {
@@ -23,30 +27,45 @@ export class FormularioRegistroComponent {
   }
 
   createFormGroup(): FormGroup {
+    const today = moment().format('YYYY-MM-DD');
     return this.fb.group({
-      id: this.fb.control('', Validators.required),
-      name: this.fb.control('', Validators.required),
-      description: this.fb.control('', Validators.required),
-      logo: this.fb.control('', Validators.required),
-      date_release: this.fb.control(HelperFunctions.getFormatDate(0), Validators.required),
-      date_revision: this.fb.control({ value: HelperFunctions.getFormatDate(enviroment.days_for_review), disabled: true })
+      id: this.fb.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]),
+      name: this.fb.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
+      description: this.fb.control('', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]),
+      logo: this.fb.control('', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/)]),
+      date_release: this.fb.control(HelperFunctions.getFormatDate(today, 0), Validators.required),
+      date_revision: this.fb.control(HelperFunctions.getFormatDate(today, enviroment.days_for_review), Validators.required)
     });
   }
 
   getCurrentDate(days: number): string {
-    return HelperFunctions.getFormatDate(days);
+    const today = days === 0 ? moment().format('YYYY-MM-DD') : '';
+    return HelperFunctions.getFormatDate(today, days);
   }
 
   isFieldDisabled(disabled: boolean): boolean {
     return disabled;
   }
 
-  resetFields(): void {
-    console.log('resetFields');
+  onControlDateValueChanges(value: any) {
+    if (value !== '' && value !== null) {
+      const newDate = moment(value).format('YYYY-MM-DD');
+      this.form.get('date_revision')?.setValue(HelperFunctions.getFormatDate(newDate, enviroment.days_for_review));
+    }
   }
 
-  onSubmit(): void {
-    console.log('enviar');
+  resetFields(): void {
+    console.log('resetFields');
+    this.form.reset();
+  }
+
+  sendForm(): void {
+    if (this.form.valid) {
+      console.log('valido');
+    } else {
+      console.log('NO valido');
+
+    }
   }
 
 }

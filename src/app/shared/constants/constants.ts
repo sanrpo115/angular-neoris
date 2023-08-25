@@ -76,7 +76,7 @@ export const FIELDS_FORM = {
       required: true,
       messageObligatoryValidation: true,
       min: 30,
-      pattern: /^https?:\gm/
+      pattern: /^https?:\g/
     },
     {
       label: 'Fecha de Liberación',
@@ -85,7 +85,7 @@ export const FIELDS_FORM = {
       type: INPUT_TYPES.date,
       required: true,
       messageObligatoryValidation: true,
-      min: 1,
+      min: 0,
       disabled: false
     },
     {

@@ -2,6 +2,7 @@
 @import '../../../../assets/scss/components/buttons';
 @import '../../../../assets/scss/components/inputs';
 @import '../../../../assets/scss/components/fields';
+@import '../../../../assets/scss/components/alerts';
 
 .app-content {
   width: 50%;
@@ -37,6 +38,10 @@
         flex-wrap: wrap;
         .form-field {
           width: calc(50% - 20px);
+          &.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+          }
           &:nth-child(odd) {
             margin-right: 20px;
           }

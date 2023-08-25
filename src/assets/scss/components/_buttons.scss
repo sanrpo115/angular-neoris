@@ -21,5 +21,9 @@ button {
   &.h45 {
     height: 55px;
   }
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
 }
