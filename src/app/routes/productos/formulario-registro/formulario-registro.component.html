@@ -1,0 +1,23 @@
+<div class="app-content">
+  <div class="header">
+    <h1 class="title">Formulario de Registro</h1>
+  </div>
+  <div class="divider"></div>
+  <div class="form-container">
+    <form [formGroup]="form" >
+        <div class="form-fields">
+          <ng-container *ngFor="let field of formConfiguration" [ngSwitch]="field.type">
+            <ng-container *ngSwitchCase="'text'">
+              <app-input-text class="app-input" [dataComponent]="field"></app-input-text>
+            </ng-container>
+            <ng-container *ngSwitchCase="'url'">
+              <app-input-url class="app-input" [dataComponent]="field"></app-input-url>
+            </ng-container>
+            <ng-container *ngSwitchCase="'date'">
+              <app-input-date class="app-input" [dataComponent]="field"></app-input-date>
+            </ng-container>
+          </ng-container>
+        </div>
+    </form>
+  </div>
+</div>
