@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GestionProductosComponent } from './gestion-productos.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { GestionProductosService } from 'src/app/shared/services/gestion-productos.service';
+import { CoreModule } from 'src/app/core/core.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('GestionProductosComponent', () => {
   let component: GestionProductosComponent;
@@ -9,7 +12,12 @@ describe('GestionProductosComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ 
-        SharedModule
+        SharedModule,
+        CoreModule,
+        HttpClientTestingModule
+      ],
+      providers: [
+        GestionProductosService
       ],
       declarations: [
         GestionProductosComponent
@@ -23,4 +31,6 @@ describe('GestionProductosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
 });
