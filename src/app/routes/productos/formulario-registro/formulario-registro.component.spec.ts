@@ -1,116 +1,138 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { FormularioRegistroComponent } from './formulario-registro.component';
-import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
-import { enviroment } from 'src/enviroments/enviroment';
+import { GestionProductosService } from '../../../shared/services/gestion-productos.service';
+import { ModalMessageService } from '../../../shared/services/modal-message.service';
 import * as moment from 'moment';
 
 describe('FormularioRegistroComponent', () => {
-  let mockRouter: any;
-  let mockActivatedRoute: any;
   let component: FormularioRegistroComponent;
   let fixture: ComponentFixture<FormularioRegistroComponent>;
+  let mockGestionProductosService: any;
+  let mockModalMessageService: any;
+  let mockRouter: any;
+  let mockActivatedRoute: any;
 
-  beforeEach(() => {
-    mockRouter = {
-      navigate: jasmine.createSpy('navigate')
-    };
+  const mockData = [
+    { id: "test-5", name: "test", description: "test", logo: "test", date_release: "2023-12-12T00:00:00.000+00:00", date_revision: "2024-12-12T00:00:00.000+00:00" },
+    { id: "test-2", name: "test", description: "test", logo: "test", date_release: "2023-11-12T00:00:00.000+00:00", date_revision: "2024-11-12T00:00:00.000+00:00"  }
+  ];
 
+  beforeEach(async () => {
+    mockGestionProductosService = jasmine.createSpyObj(['dataSource', 'verifyID', 'createProduct', 'updateProduct']);
+    mockGestionProductosService.dataSource = of([]);
+    mockGestionProductosService.verifyID.and.returnValue(of(false));
+    mockGestionProductosService.createProduct.and.returnValue({ status: 200 });
+    mockGestionProductosService.updateProduct.and.returnValue({ status: 200 });
+    mockModalMessageService = jasmine.createSpyObj(['setStateModal', 'open']);
+    mockRouter = { navigate: jasmine.createSpy('navigate') };
+    // mockActivatedRoute = { paramMap: of({ has: () => false }) };
     mockActivatedRoute = {
-      paramMap: of({ get: () => '123' })
+      paramMap: of({ has: (param: string) => param === 'id' }),
+      snapshot: {
+        paramMap: {
+          get: (param: string) => 'mock_id'
+        }
+      }
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [FormularioRegistroComponent],
       providers: [
-        FormBuilder,
+        { provide: GestionProductosService, useValue: mockGestionProductosService },
+        { provide: ModalMessageService, useValue: mockModalMessageService },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
-      ]
-    });
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
+    }).compileComponents();
+  });
+  
+  beforeEach(() => {
     fixture = TestBed.createComponent(FormularioRegistroComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  })
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form and subscribe to valueChanges', () => {
+  it('should initialize form and formConfiguration', () => {
     expect(component.form).toBeDefined();
-    expect(component.form.get('date_release')).toBeDefined();
-
-    spyOn(component, 'onControlDateValueChanges');
-    component.form.get('date_release')?.setValue('2023-08-24');
-    expect(component.onControlDateValueChanges).toHaveBeenCalledWith('2023-08-24');
+    expect(component.formConfiguration).toBeDefined();
   });
 
-  it('should set formConfiguration on ngOnInit', () => {
+  it('should handle paramMap without data source', () => {
+    component.datasource = [];
+
+    spyOn(component, 'getFormValues');
+    spyOn(component, 'removeParams');
+
     component.ngOnInit();
-    expect(component.formConfiguration).toEqual(FIELDS_FORM.fields);
+
+    expect(component.getFormValues).not.toHaveBeenCalled();
+    expect(component.removeParams).toHaveBeenCalled();
   });
 
-  it('should create form group with validators', () => {
-    const formGroup: FormGroup = component.createFormGroup();
-    expect(formGroup).toBeTruthy();
-    expect(formGroup.get('id')).toBeTruthy();
-    expect(formGroup.get('name')).toBeTruthy();
-    expect(formGroup.get('description')).toBeTruthy();
-    expect(formGroup.get('logo')).toBeTruthy();
-    expect(formGroup.get('date_release')).toBeTruthy();
-    expect(formGroup.get('date_revision')).toBeTruthy();
-  });
+  it('should navigate to the specified route', () => {
+    component.removeParams();
 
-  it('should return formatted current date', () => {
-    const currentDate = component.getCurrentDate(0);
-    const expectedDate = HelperFunctions.getFormatDate(
-      HelperFunctions.getFormatDate(moment().format('YYYY-MM-DD'), 0),
-      0
-    );
-    expect(currentDate).toBe(expectedDate);
-  });
-
-  it('should disable field based on input', () => {
-    const disabled = component.isFieldDisabled(true);
-    expect(disabled).toBeTrue();
-  });
-
-  it('should update date_revision on date_release change', () => {
-    component.onControlDateValueChanges('2023-08-24');
-    const updatedDate = HelperFunctions.getFormatDate(
-      HelperFunctions.getFormatDate('2023-08-24', 0),
-      enviroment.days_for_review
-    );
-    expect(component.form.get('date_revision')?.value).toBe(updatedDate);
-  });
-
-  it('should reset form', () => {
-    spyOn(console, 'log');
-    component.resetFields();
-    expect(component.form.pristine).toBeTrue();
-  });
-
-  it('should log "valido" if form is valid', () => {
-    component.form.setValue({
-      id: '123',
-      name: 'Test Name',
-      description: 'Test Description',
-      logo: 'https://example.com/logo.png',
-      date_release: '2023-08-24',
-      date_revision: '2023-08-25'
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/productos/formulario-registro'], {
+      relativeTo: mockActivatedRoute,
     });
-    spyOn(console, 'log');
-    component.sendForm();
+  }); 
+
+  it('should return the value of disabled parameter', () => {
+    const disabled = true;
+    const result = component.isFieldDisabled(disabled);
+    expect(result).toBe(disabled);
   });
 
-  it('should log "NO valido" if form is not valid', () => {
-    spyOn(console, 'log');
-    component.sendForm();
+  it('should update date_revision when date_release changes', () => {
+    const mockValue = new Date('2023-08-26');
+    component.form.get('date_release')?.setValue(mockValue);
+
+    const formattedDate = moment(mockValue).format('YYYY-MM-DD');
+    const expectedDate = HelperFunctions.getFormatDate(formattedDate, 366);
+
+    expect(component.form.get('date_revision')?.value).toEqual(expectedDate);
+  });
+
+  it('should reset the form', () => {
+    const mockFormValues = {
+      id: '123',
+      name: 'Product Name',
+      description: 'Product Description',
+      logo: 'product-logo.png',
+      date_release: '2023-08-26',
+      date_revision: '2023-08-28',
+    };
+
+    component.form.patchValue(mockFormValues);
+    component.resetFields();
+
+    expect(component.form.value).toEqual({
+      id: null,
+      name: null,
+      description: null,
+      logo: null,
+      date_release: null,
+      date_revision: null,
+    });
+  });
+
+  it('should navigate to gestion-productos on goBack', () => {
+    component.goBack();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/productos/gestion-productos'], { relativeTo: mockActivatedRoute });
+  });
+
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
 });
