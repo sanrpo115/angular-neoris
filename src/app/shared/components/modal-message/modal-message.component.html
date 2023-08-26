@@ -1,0 +1,16 @@
+<ng-container *ngIf="display$ | async as display">
+  <section [class.open]="display === 'open'" (click)="close()">
+    <div (click)="$event.stopPropagation()">
+      <div class="header__modal">
+        <h1>{{title}}</h1>
+        <button class="close" type="button" (click)="close()">X</button>
+      </div>
+      <div class="body__modal">
+        <p>{{message}}</p>
+      </div>
+      <div class="footer__modal">
+        <button type="button" class="primary h45" (click)="close()">Aceptar</button>
+      </div>
+    </div>
+  </section>
+</ng-container>

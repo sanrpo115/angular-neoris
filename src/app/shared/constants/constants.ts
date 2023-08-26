@@ -100,3 +100,38 @@ export const FIELDS_FORM = {
     },
   ]
 }
+
+export const DEFAULT_MSSG = {
+  200: {
+    title: '¡Bien hecho!',
+    message: 'La operación se completo exitosamente'
+  },
+  202: {
+    title: 'ID Existente',
+    message: 'El ID ingresado ya existe, por favor ingresa uno nuevo.'
+  },
+  206: {
+    title: 'Error 206',
+    message: 'Nombre y/o descripción no deben ser nulos.'
+  },
+  400: {
+    title: 'Error 400',
+    message: 'La petición enviada no tiene los Headers correspondientes'
+  },
+  401: {
+    title: 'Error 401',
+    message: 'Debes ser el dueño del producto para poder actualizarlo'
+  },
+  404: {
+    title: 'Error 404',
+    message: 'No se ha encontrado el recurso solicitado'
+  },
+  info: {
+    title: 'Info',
+    message: ''
+  },
+  warning: {
+    title: '¡Ups!',
+    message: 'Ha ocurrido un error, por favor intentalo de nuevo'
+  }
+}

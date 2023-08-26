@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { enviroment } from 'src/enviroments/enviroment';
 import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
 import { GestionProductosService } from 'src/app/shared/services/gestion-productos.service';
 import * as moment from 'moment';
+import { ModalMessageService } from 'src/app/shared/services/modal-message.service';
 
 @Component({
   selector: 'app-formulario-registro',
@@ -17,11 +18,13 @@ export class FormularioRegistroComponent {
   form: FormGroup;
   isEdit: boolean = false;
   idActive: any = '' || null;
+  modalOpen: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private gestionProductosService: GestionProductosService
+    private gestionProductosService: GestionProductosService,
+    private modalMessageService: ModalMessageService
   ) {
     this.form = this.createFormGroup();
     this.form.get('date_release')?.valueChanges.subscribe(newValue => {
@@ -74,17 +77,33 @@ export class FormularioRegistroComponent {
     this.form.reset();
   }
 
-  sendForm() {
-    if (this.form.valid) {
-      const values = this.form.value;
-      this.gestionProductosService.verifyID(values.id).subscribe(data => {
-        if (!data) {
-          this.gestionProductosService.createProduct(values)
-        } else {
-          console.log("ID existente")
-        }
-      });;
+  async sendForm() {
+    try {
+      if (this.form.valid) {
+        const values = this.form.value;
+        this.gestionProductosService.verifyID(values.id).subscribe(async (data: any) => {
+          if (!data) {
+            const response = await this.gestionProductosService.createProduct(values);
+            console.log('resposn', response);
+            if (response.status === 200) {
+              this.modalMessageService.setStateModal(response.status);
+              this.open();
+            }
+          } else {
+            this.modalMessageService.setStateModal(202);
+            this.open();
+            console.log("ID existente")
+          }
+        });
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      this.modalMessageService.setStateModal('warning');
+      this.open();
     }
   }
 
+  open() {
+    this.modalMessageService.open();
+  }
 }
