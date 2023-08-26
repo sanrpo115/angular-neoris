@@ -6,7 +6,7 @@ import { DEFAULT_MSSG } from '../constants/constants';
   providedIn: 'root'
 })
 export class ModalMessageService {
-  private defaultMessage: any = DEFAULT_MSSG;
+  defaultMessage: any = DEFAULT_MSSG;
   private display: BehaviorSubject<'open' | 'close'> = new BehaviorSubject<'open' | 'close'>('close');
   title: BehaviorSubject<any> = new BehaviorSubject<any>('Modal Title');
   message: BehaviorSubject<any> = new BehaviorSubject<any>('Modal Message');
