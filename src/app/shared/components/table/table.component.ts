@@ -78,7 +78,6 @@ export class TableComponent implements OnInit {
         this.modalMessageService.setStateModal('warning');
         this.modalMessageService.open();
       }
-      console.log('res', response);
       resolve(response);
     });
   }

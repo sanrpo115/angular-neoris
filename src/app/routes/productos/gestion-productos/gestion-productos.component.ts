@@ -30,7 +30,6 @@ export class GestionProductosComponent implements OnInit {
   }
 
   navigateTo(): void {
-    console.log('navigateTo')
     this.router.navigate([`${enviroment.context_path}/formulario-registro`]);
   }
 

@@ -92,7 +92,6 @@ describe('FormularioRegistroComponent', () => {
   it('should reset form', () => {
     spyOn(console, 'log');
     component.resetFields();
-    expect(console.log).toHaveBeenCalledWith('resetFields');
     expect(component.form.pristine).toBeTrue();
   });
 
@@ -107,13 +106,11 @@ describe('FormularioRegistroComponent', () => {
     });
     spyOn(console, 'log');
     component.sendForm();
-    expect(console.log).toHaveBeenCalledWith('valido');
   });
 
   it('should log "NO valido" if form is not valid', () => {
     spyOn(console, 'log');
     component.sendForm();
-    expect(console.log).toHaveBeenCalledWith('NO valido');
   });
 
 });
