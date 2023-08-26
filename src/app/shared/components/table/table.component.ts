@@ -22,7 +22,6 @@ interface DataItem {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-
 export class TableComponent implements OnInit {
   show: boolean = false;
   idActive: string = '';
