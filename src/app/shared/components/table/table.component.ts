@@ -30,11 +30,26 @@ export class TableComponent implements OnInit {
   columns = Object.values(COLUMNS_TABLE);
   propsColumns = Object.keys(COLUMNS_TABLE)
   datasource: DataItem[] = [];
+  searchQuery: string = '';
+  originalData: DataItem[] = [];
+  filteredData: DataItem[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = enviroment.itemsPerPage;
+  total: number = 0;
   subscriptions: Subscription = new Subscription();
 
   constructor(private router: Router, private gestionProductosService: GestionProductosService, private modalMessageService: ModalMessageService) {
     this.subscriptions = this.gestionProductosService.dataSource.subscribe((res: DataItem[]) => {
       this.datasource = res;
+      if (res && res.length) {
+        this.total = res.length;
+        this.originalData = [...res];
+        this.filteredData = [...res];
+      }
+    });
+    this.subscriptions = this.gestionProductosService.searchQuery.subscribe((txt: string) => {
+      this.searchQuery = txt;
+      this.search();
     });
   }
 
@@ -80,6 +95,32 @@ export class TableComponent implements OnInit {
       }
       resolve(response);
     });
+  }
+
+  search(): void {
+    this.filteredData = this.originalData.filter((product: DataItem) => 
+      product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+      product.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+    )
+  }
+
+  getPaginatedData(): DataItem[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.getTotalPages())
+      this.currentPage++;
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1)
+      this.currentPage--;
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.filteredData.length / this.itemsPerPage);
   }
 
 }

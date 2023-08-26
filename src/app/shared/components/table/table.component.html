@@ -8,8 +8,8 @@
       <th></th>
     </tr>
   </thead>
-  <tbody *ngIf="datasource && datasource.length > 0">
-    <tr *ngFor="let data of datasource">
+  <tbody *ngIf="filteredData && filteredData.length > 0">
+    <tr *ngFor="let data of getPaginatedData()">
       <td *ngFor="let prop of propsColumns">
         <img *ngIf="prop === 'logo' " src="{{data[prop]}}" alt="">
         <span *ngIf="prop !== 'logo'">
@@ -23,6 +23,16 @@
 		</tr>
   </tbody>
 </table>
+<div class="footer-content-table">
+  <div class="total-rows">
+    {{total}} Resultados
+  </div>
+  <div class="pagination">
+    <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+    <span>{{ currentPage }} de {{ getTotalPages() }}</span>
+    <button class="btn-page" (click)="nextPage()" [disabled]="currentPage === getTotalPages()">Siguiente</button>
+  </div>
+</div>
 <ng-template #dropdownTable let-data="data">
   <div id="myDropdown" *ngIf="data.dropdownOpen" class="dropdown-content">
     <ul class="action-list">
@@ -31,6 +41,6 @@
     </ul>
   </div>
 </ng-template>
-<ng-container *ngIf="datasource && datasource.length <= 0">
+<ng-container *ngIf="filteredData && filteredData.length <= 0">
   <app-loading></app-loading>
 </ng-container>

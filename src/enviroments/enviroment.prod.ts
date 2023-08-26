@@ -8,5 +8,6 @@ export const enviroment = {
   path: 'bp',
   context: 'products',
   idVerify: '/verification',
-  authorId: '2'
+  authorId: '2',
+  itemsPerPage: 5
 }

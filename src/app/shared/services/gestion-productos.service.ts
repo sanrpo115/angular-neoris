@@ -13,6 +13,7 @@ import * as moment from 'moment';
 export class GestionProductosService {
   endpoint: string = enviroment.context;
   dataSource: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private productRepositoryApi: ProductRepositoryApi) { }
 
@@ -63,6 +64,10 @@ export class GestionProductosService {
 
   verifyID(id: string): Observable<any> {
     return this.productRepositoryApi.verificationId(id);
+  }
+
+  search(value: string): void {
+    this.searchQuery.next(value);
   }
 
 }
