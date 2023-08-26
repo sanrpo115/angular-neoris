@@ -1,46 +1,74 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { enviroment } from 'src/enviroments/enviroment';
 import { FIELDS_FORM } from 'src/app/shared/constants/constants';
 import { HelperFunctions } from 'src/app/shared/utils/helper-functions';
+import { ModalMessageService } from 'src/app/shared/services/modal-message.service';
 import { GestionProductosService } from 'src/app/shared/services/gestion-productos.service';
 import * as moment from 'moment';
-import { ModalMessageService } from 'src/app/shared/services/modal-message.service';
 
 @Component({
   selector: 'app-formulario-registro',
   templateUrl: './formulario-registro.component.html',
   styleUrls: ['./formulario-registro.component.scss']
 })
-export class FormularioRegistroComponent {
+export class FormularioRegistroComponent implements OnInit {
   formConfiguration = new Array();
   form: FormGroup;
   isEdit: boolean = false;
   idActive: any = '' || null;
   modalOpen: boolean = false;
+  datasource: any = [];
+  subscriptions: Subscription = new Subscription();
 
   constructor(
-    private fb: FormBuilder,
+    private router: Router,
+    private fb: FormBuilder, 
     private route: ActivatedRoute,
-    private gestionProductosService: GestionProductosService,
+    private gestionProductosService: GestionProductosService, 
     private modalMessageService: ModalMessageService
   ) {
+    this.subscriptions = this.gestionProductosService.dataSource.subscribe((res:any) => {
+      if (res)
+        this.datasource = res;
+    });
     this.form = this.createFormGroup();
+  }
+  
+  ngOnInit(): void {
+    this.formConfiguration = FIELDS_FORM.fields;
     this.form.get('date_release')?.valueChanges.subscribe(newValue => {
       this.onControlDateValueChanges(newValue);
     })
-  }
-
-  ngOnInit(): void {
-    this.formConfiguration = FIELDS_FORM.fields;
     this.route.paramMap.subscribe(params => {
-      if (params.has('id')) {
-        this.isEdit = true;
-        this.idActive = params.get('id');
-        console.log(this.idActive);
+      if (this.datasource.length) {
+        this.getFormValues(params);
+      } else {
+        this.removeParams();
       }
     });
+  }
+
+  getFormValues(params: any): void {
+    if (params.has('id')) {
+      this.isEdit = true;
+      this.idActive = params.get('id');
+      const values = this.datasource.find((x: any) => x.id === this.idActive);
+      this.form.patchValue({
+        id: values.id,
+        name: values.name,
+        description: values.description,
+        logo: values.logo,
+        date_release: values.date_release,
+        date_revision: values.date_revision
+      });
+    }
+  }
+
+  removeParams(): void {
+    this.router.navigate(['/productos/formulario-registro'], { relativeTo: this.route })
   }
 
   createFormGroup(): FormGroup {
@@ -50,8 +78,6 @@ export class FormularioRegistroComponent {
       name: this.fb.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
       description: this.fb.control('', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]),
       logo: this.fb.control('', [Validators.required]),
-      // Se comenta control ya que la validacion Regex bloquea el formulario
-      // logo: this.fb.control('', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/)]),
       date_release: this.fb.control(HelperFunctions.getFormatDate(today, 0), Validators.required),
       date_revision: this.fb.control(HelperFunctions.getFormatDate(today, enviroment.days_for_review), Validators.required)
     });
@@ -84,26 +110,30 @@ export class FormularioRegistroComponent {
         this.gestionProductosService.verifyID(values.id).subscribe(async (data: any) => {
           if (!data) {
             const response = await this.gestionProductosService.createProduct(values);
-            console.log('resposn', response);
             if (response.status === 200) {
               this.modalMessageService.setStateModal(response.status);
-              this.open();
+              this.modalMessageService.open();
             }
           } else {
-            this.modalMessageService.setStateModal(202);
-            this.open();
-            console.log("ID existente")
+            const response = await this.gestionProductosService.updateProduct(values);
+            if (response.status === 200) {
+              this.modalMessageService.setStateModal(response.status);
+              this.modalMessageService.open();
+            } else {
+              this.modalMessageService.setStateModal(202);
+              this.modalMessageService.open();
+            }
           }
         });
       }
     } catch (error: any) {
       console.log(error.message);
       this.modalMessageService.setStateModal('warning');
-      this.open();
+      this.modalMessageService.open();
     }
   }
 
-  open() {
-    this.modalMessageService.open();
+  goBack(): void {
+    this.router.navigate(['/productos/gestion-productos'], { relativeTo: this.route })
   }
 }

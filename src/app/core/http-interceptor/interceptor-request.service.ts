@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -22,11 +22,10 @@ export class HttpInterceptRequestService implements HttpInterceptor {
     const reqWithHeaders = req.clone({ headers: defaultHeaders });
 
 
-    return next.handle(reqWithHeaders).pipe(catchError((err: HttpErrorResponse) => {
+    return next.handle(reqWithHeaders).pipe(
+      catchError((err: HttpErrorResponse) => {
       if(err.status === 401) {
         document.write(err.error)
-      } else {
-        console.log('Un error ha ocurrido: ', err.error.message);
       }
       return throwError(err);
     }));

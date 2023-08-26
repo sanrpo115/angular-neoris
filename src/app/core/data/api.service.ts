@@ -21,7 +21,7 @@ export class ApiService {
   }
   
   put(endpoint: string, data: any): Observable<any> {
-    return this.http.put(`${this.urlBase}/${endpoint}`, data);
+    return this.http.put(`${this.urlBase}/${endpoint}`, data, { observe: 'response' });
   }
   
   delete(endpoint: string): Observable<any> {

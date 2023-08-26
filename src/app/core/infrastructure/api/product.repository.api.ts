@@ -26,8 +26,8 @@ export class ProductRepositoryApi implements ProductRepository {
     return this.apiService.put(this.endpoint, product);
   }
 
-  deleteProduct(): Observable<any> {
-    return this.apiService.delete(this.endpoint);
+  deleteProduct(id: string): Observable<any> {
+    return this.apiService.delete(`${this.endpoint}?id=${id}`);
   }
 
   verificationId(id: string): Observable<boolean> {

@@ -17,17 +17,20 @@
         </span>
 			</td>
       <td>
-        <span class="actions" (click)="toggleDropdown(data)"></span>
-        <div id="myDropdown" *ngIf="data.dropdownOpen" class="dropdown-content">
-          <ul class="action-list">
-            <li class="actions-item" (click)="editProduct(data)">Editar</li>
-            <li class="actions-item" (click)="deleteProduct(data)">Eliminar</li>
-          </ul>
-        </div>
+        <span class="actions" id="{{data.id}}" (click)="toggleDropdown(data)"></span>
+        <ng-container *ngTemplateOutlet="dropdownTable; context: { data: data }"></ng-container>
       </td>
 		</tr>
   </tbody>
 </table>
+<ng-template #dropdownTable let-data="data">
+  <div id="myDropdown" *ngIf="data.dropdownOpen" class="dropdown-content">
+    <ul class="action-list">
+      <li class="actions-item" (click)="editProduct(data)">Editar</li>
+      <li class="actions-item" (click)="deleteRow(data.id)">Eliminar</li>
+    </ul>
+  </div>
+</ng-template>
 <ng-container *ngIf="datasource && datasource.length <= 0">
   <app-loading></app-loading>
 </ng-container>

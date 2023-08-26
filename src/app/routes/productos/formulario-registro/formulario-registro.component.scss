@@ -9,6 +9,25 @@
   width: 50%;
   background-color: $c-wh;
   margin: 0 auto;
+  position: relative;
+  margin-top: 50px;
+  .go-back {
+    position: absolute;
+    top: -30px;
+    div {
+      span {
+        font-size: 16px;
+        color: $c-gr-dk;
+        font-family: $bold;
+        cursor: pointer;
+        &::before {
+          content: '\2190';
+          margin-right: 5px;
+          font-size: 20px;
+        }
+      }
+    }
+  }
   .header {
     width: 100%;
     text-align: center;

@@ -1,4 +1,7 @@
 <div class="app-content">
+  <div class="go-back">
+    <div (click)="goBack()"><span>Regresar</span></div>
+  </div>
   <div class="header">
     <h1 class="title">Formulario de Registro</h1>
   </div>
@@ -8,10 +11,10 @@
         <div class="form-fields">
           <ng-container *ngFor="let field of formConfiguration" [ngSwitch]="field.type">
             <ng-container *ngSwitchCase="'text'">
-              <div class="form-field">
+              <div class="form-field" [ngClass]="{'disabled': isEdit && field.fieldName === 'id'}">
                 <label for="{{field.fieldName}}">{{field.label}}</label>
                 <input type="text" name="{{field.fieldName}}" id="{{field.fieldName}}" [formControlName]="field.fieldName" 
-                  placeholder="{{field.placeholder}}" required min="{{field.minlength}}">
+                  placeholder="{{field.placeholder}}" required min="{{field.minlength}}" [disabled]="isEdit && field.fieldName === 'id'">
                 <div *ngIf="form.get(field.fieldName)?.touched && form.get(field.fieldName)?.errors?.['required']" class="alert alert-danger">
                   Este campo es requerido!
                 </div>
